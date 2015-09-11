@@ -27,9 +27,11 @@ class PasteManager
   _paste: ->
     oldDocLength = @quill.getLength()
     range = @quill.getSelection()
+    scrollTopBefore = @quill.container.scrollTop
+    containerClientRect = @quill.container.getBoundingClientRect()
     return unless range?
     @container.focus()
-    _.defer( =>
+    window.requestAnimationFrame( =>
       delta = @options.onConvert(@container)
       lengthAdded = delta.length()
       if lengthAdded > 0
@@ -37,11 +39,16 @@ class PasteManager
         delta.delete(range.end - range.start)
         @quill.updateContents(delta, 'user')
       @quill.setSelection(range.start + lengthAdded, range.start + lengthAdded)
-      # Make sure bottom of pasted content is visible
+      # Make sure pasted content is visible
       [line, offset] = @quill.editor.doc.findLineAt(range.start + lengthAdded)
-      lineBottom = line.node.getBoundingClientRect().bottom
-      windowBottom = document.documentElement.clientHeight
-      line.node.scrollIntoView(false) if lineBottom > windowBottom
+      lineClientRect = line.node.getBoundingClientRect()
+      lineBottom = lineClientRect.bottom
+      if scrollTopBefore + containerClientRect.top < lineBottom < scrollTopBefore + containerClientRect.top + containerClientRect.height
+        # pasted line was in conteiner viewport — return scrollTop
+        @quill.container.scrollTop = scrollTopBefore
+      else
+        # calculate scrollTop of container in the way that pasted content in the middle
+        @quill.container.scrollTop = line.node.offsetTop + lineClientRect.height - containerClientRect.height/2
       @container.innerHTML = ""
     )
 
