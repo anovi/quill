@@ -88,9 +88,14 @@ class Editor
     return null unless leaf?
     containerBounds = @root.parentNode.getBoundingClientRect()
     side = 'left'
-    if leaf.length == 0   # BR case
-      bounds = leaf.node.parentNode.getBoundingClientRect()
-    else if dom.VOID_TAGS[leaf.node.tagName]
+    ###
+    Removed BR case because getBoundingClientRect gets wrong top value
+    It works fine without this piece
+    ###
+    # if leaf.length == 0   # BR case
+      # bounds = leaf.node.parentNode.getBoundingClientRect()
+    # else if dom.VOID_TAGS[leaf.node.tagName]
+    if dom.VOID_TAGS[leaf.node.tagName]
       bounds = leaf.node.getBoundingClientRect()
       side = 'right' if offset == 1
     else
