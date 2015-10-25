@@ -69,9 +69,11 @@ class UndoManager
       this.clear()
 
   redo: ->
+    @quill.emit('redo')
     this._change('redo', 'undo')
 
   undo: ->
+    @quill.emit('undo')
     this._change('undo', 'redo')
 
   _getLastChangeIndex: (delta) ->
