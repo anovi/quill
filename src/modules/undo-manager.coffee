@@ -53,6 +53,9 @@ class UndoManager
     try
       undoDelta = @quill.getContents().diff(@oldDelta)
       timestamp = new Date().getTime()
+      # Added callback to modify delta before undo
+      if @options.onUndo
+        @options.onUndo(undoDelta)
       if @lastRecorded + @options.delay > timestamp and @stack.undo.length > 0
         change = @stack.undo.pop()
         undoDelta = undoDelta.compose(change.undo)
