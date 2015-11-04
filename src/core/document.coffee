@@ -12,6 +12,7 @@ class Document
     @normalizer = new Normalizer()
     @formats = {}
     _.each(options.formats, _.bind(this.addFormat, this))
+    @options = options
     this.setHTML(@root.innerHTML)
 
   addFormat: (name, config) ->

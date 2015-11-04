@@ -101,7 +101,8 @@ class Line extends LinkedList.Node
           [leftNode, targetNode] = dom(targetNode).split(leafOffset)
         if leaf.length > leafOffset + length  # leaf.length does not update with split()
           [targetNode, rightNode] = dom(targetNode).split(length)
-        format.add(targetNode, value)
+        formattedNode = format.add(targetNode, value)
+        @doc.options['onFormat' + name]?(formattedNode)
       length -= leaf.length - leafOffset
       leafOffset = 0
       leaf = nextLeaf
