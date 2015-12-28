@@ -25,6 +25,7 @@ class PasteManager
     return delta.compose(new Delta().retain(lengthAdded - 1).delete(1))
 
   _paste: ->
+    @options.onPaste?()
     oldDocLength = @quill.getLength()
     range = @quill.getSelection()
     scrollTopBefore = @quill.container.scrollTop
