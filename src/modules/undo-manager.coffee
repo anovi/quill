@@ -56,6 +56,7 @@ class UndoManager
       # Added callback to modify delta before undo
       if @options.onUndo
         @options.onUndo(undoDelta)
+        @options.onUndo(changeDelta)
       if @lastRecorded + @options.delay > timestamp and @stack.undo.length > 0
         change = @stack.undo.pop()
         undoDelta = undoDelta.compose(change.undo)
